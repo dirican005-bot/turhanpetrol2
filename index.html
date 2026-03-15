@@ -4,43 +4,154 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Turhan Akaryakıt | Karapınar / Konya</title>
-  <meta name="description" content="Turhan Akaryakıt - Petrol Ofisi & BP, Ultra Plus Market, Tchibo Kahve, UTTS bölge anabayi, modern dinlenme ve hijyen alanları." />
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <meta name="description" content="Turhan Akaryakıt - Petrol Ofisi & BP güvencesiyle akaryakıt, Ultra Plus Market, Tchibo kahve, UTTS montaj servisi, oto yıkama ve modern sosyal alanlar." />
+  <style>
+    :root{--green:#1f6b47;--green-2:#2f8b5a;--dark:#0f1720;--text:#1d2430;--muted:#64748b;--bg:#f5f7f6;--card:#ffffff;--line:#e6ece8;--shadow:0 18px 45px rgba(9,22,18,.12);--radius:24px;--max:1180px}
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:linear-gradient(180deg,#ffffff 0%, #f6faf7 100%)}
+    img{display:block;max-width:100%} a{text-decoration:none;color:inherit}
+    .container{width:min(var(--max), calc(100% - 32px));margin:0 auto}
+    .topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(220,228,223,.8)}
+    .topbar-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 0}
+    .brand{display:flex;align-items:center;gap:14px;min-width:0}
+    .brand img{height:54px;width:auto;object-fit:contain}
+    .nav{display:flex;gap:28px;align-items:center;font-weight:700}
+    .nav a{color:#223}.nav a:hover{color:var(--green)}
+    .nav-actions{display:flex;gap:12px;align-items:center}
+    .menu-btn,.wa-mini{border:none;border-radius:16px;height:50px;padding:0 18px;display:inline-flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;cursor:pointer;box-shadow:var(--shadow)}
+    .wa-mini{background:var(--green);color:#fff}.menu-btn{background:#edf3ef;color:var(--green);padding:0 16px;min-width:50px}
+    .mobile-panel{display:none;flex-direction:column;gap:14px;padding:0 0 16px}
+    .mobile-panel a{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;font-weight:700}
+    .mobile-panel.open{display:flex}
+    .hero{position:relative;overflow:hidden;background:#091116}
+    .hero-bg{position:absolute;inset:0}
+    .hero-bg .slide{position:absolute;inset:0;background-size:cover;background-position:center center;opacity:0;transform:scale(1.04);transition:opacity 1.2s ease, transform 8s ease}
+    .hero-bg .slide.active{opacity:1;transform:scale(1)}
+    .hero-overlay{position:absolute;inset:0;background:radial-gradient(circle at 18% 18%, rgba(255,255,255,.10), transparent 24%),linear-gradient(90deg, rgba(4,10,8,.78) 0%, rgba(5,10,8,.55) 38%, rgba(5,10,8,.22) 68%, rgba(5,10,8,.55) 100%)}
+    .hero-grid{position:relative;z-index:2;min-height:840px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);align-items:end;gap:32px;padding:72px 0 58px}
+    .hero-copy{color:#fff;padding:40px 0 20px;animation:fadeUp .8s ease both}
+    .eyebrow{display:inline-flex;gap:10px;align-items:center;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:999px;padding:10px 16px;font-weight:800;margin-bottom:18px}
+    .hero h1{font-size:78px;line-height:.94;margin:0 0 14px;letter-spacing:-1.6px;text-shadow:0 12px 35px rgba(0,0,0,.35)}
+    .hero p.lead{font-size:24px;line-height:1.45;margin:0 0 24px;color:rgba(255,255,255,.92);max-width:700px}
+    .hero-badges{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 24px}
+    .hero-badges span{display:inline-flex;align-items:center;padding:12px 14px;border-radius:999px;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.16);font-weight:700;font-size:15px}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:24px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:18px;padding:17px 22px;font-weight:800;font-size:18px;line-height:1;transition:transform .18s ease, box-shadow .18s ease, background .18s ease}
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{background:var(--green);color:#fff;box-shadow:var(--shadow)}
+    .btn-secondary{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.18)}
+    .btn-light{background:#fff;color:var(--green);box-shadow:var(--shadow)}
+    .hero-card{align-self:end;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px);color:#fff;border-radius:28px;padding:22px;box-shadow:var(--shadow);animation:fadeUp 1s ease both}
+    .hero-card h3{margin:0 0 16px;font-size:28px}
+    .hero-metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+    .metric{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:16px}
+    .metric b{display:block;font-size:28px;margin-bottom:6px}.metric span{font-size:14px;color:rgba(255,255,255,.82)}
+    .hero-card .contact-line{display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid rgba(255,255,255,.12);font-weight:700}
+    .section{padding:82px 0}.section.alt{background:var(--bg)}
+    .section-title{font-size:48px;margin:0 0 14px;letter-spacing:-1px;color:#123725;text-align:center}
+    .section-sub{max-width:820px;margin:0 auto 38px;color:var(--muted);font-size:19px;line-height:1.6;text-align:center}
+    .brands{display:flex;justify-content:center;gap:28px;flex-wrap:wrap;margin-bottom:28px}
+    .brand-pill{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px 24px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;min-height:112px;min-width:220px}
+    .brand-pill img{max-height:70px;width:auto;object-fit:contain}
+    .service-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:26px}
+    .service-card{background:var(--card);border:1px solid var(--line);border-radius:26px;overflow:hidden;box-shadow:var(--shadow)}
+    .service-card img{width:100%;height:240px;object-fit:cover}
+    .service-card .content{padding:24px}
+    .service-card h3{margin:0 0 10px;font-size:29px}
+    .service-card p{margin:0;color:var(--muted);line-height:1.65;font-size:17px}
+    .feature-band{margin-top:24px;display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:30px;box-shadow:var(--shadow);overflow:hidden}
+    .feature-band.reverse{grid-template-columns:.85fr 1.15fr}
+    .feature-band .copy{padding:34px}
+    .feature-band h3{font-size:38px;margin:0 0 12px}
+    .feature-band p{font-size:18px;line-height:1.7;color:var(--muted);margin:0 0 18px}
+    .list{display:grid;gap:10px;padding:0;list-style:none;margin:0 0 20px}
+    .list li{display:flex;gap:10px;align-items:flex-start;font-size:18px}
+    .list li::before{content:"✓";color:var(--green);font-weight:900;width:22px;flex:0 0 22px}
+    .feature-band img{width:100%;height:100%;min-height:100%;object-fit:cover}
+    .wc-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    .wc-card{background:#fff;border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:var(--shadow)}
+    .wc-card img{width:100%;height:350px;object-fit:cover}
+    .wc-card .content{padding:22px}
+    .wc-card h3{margin:0 0 8px;font-size:28px}
+    .wc-card p{margin:0;color:var(--muted);font-size:17px;line-height:1.65}
+    .contact-section{display:grid;grid-template-columns:.95fr 1.05fr;gap:24px;align-items:stretch}
+    .contact-panel,.map-panel{background:#fff;border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);overflow:hidden}
+    .contact-panel{padding:30px}
+    .contact-panel h3{margin:0 0 18px;font-size:40px;color:var(--green)}
+    .contact-item{padding:14px 0;border-bottom:1px solid #edf2ee;font-size:22px;font-weight:700}
+    .contact-item small{display:block;font-size:14px;color:var(--muted);margin-bottom:4px;font-weight:600}
+    .contact-actions{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+    .map-panel img{width:100%;height:100%;min-height:100%;object-fit:cover}
+    .floating-wa{position:fixed;right:18px;bottom:18px;z-index:70;background:linear-gradient(135deg,#63d36e,#5ac466);color:#fff;font-weight:900;box-shadow:var(--shadow);padding:18px 26px;border-radius:999px;font-size:18px}
+    .footer{padding:26px 0 34px;background:#0f2319;color:#e7f2ec;margin-top:28px}
+    .footer-inner{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;align-items:center}
+    .footer a{color:#c9ebd5}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+    @media (max-width:1080px){
+      .hero-grid{grid-template-columns:1fr;min-height:860px;padding:50px 0 40px}
+      .hero-copy{padding-top:20px}.hero h1{font-size:58px}
+      .service-grid{grid-template-columns:1fr 1fr}
+      .feature-band,.feature-band.reverse,.contact-section{grid-template-columns:1fr}
+      .wc-grid{grid-template-columns:1fr}
+    }
+    @media (max-width:760px){
+      .nav{display:none}
+      .hero-grid{min-height:740px}
+      .hero h1{font-size:42px}.hero p.lead{font-size:18px}.hero-card{padding:18px}
+      .section{padding:64px 0}.section-title{font-size:34px}.section-sub{font-size:16px}
+      .service-grid{grid-template-columns:1fr}.service-card img{height:220px}
+      .feature-band .copy{padding:24px}.feature-band h3{font-size:30px}
+      .brands{gap:16px}.brand-pill{min-width:unset;width:100%;min-height:96px}.brand-pill img{max-height:54px}
+      .contact-panel h3{font-size:32px}.contact-item{font-size:18px}.contact-actions{grid-template-columns:1fr}
+      .hero-actions .btn{width:100%}.btn{font-size:16px}
+      .floating-wa{right:14px;bottom:14px;padding:16px 22px}
+      .brand img{height:46px}.wa-mini{display:none}
+    }
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="container nav-wrap">
-      <a href="#anasayfa" class="brand">
-        <img src="assets/img/turhan-logo.jpeg" alt="Turhan Akaryakıt logosu" />
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="#anasayfa">
+        <img src="images/turhan-logo.jpeg" alt="Turhan Akaryakıt Logo" onerror="this.src='images/turhan-logo.png'">
       </a>
-      <nav class="desktop-nav">
+      <nav class="nav">
         <a href="#anasayfa">Ana Sayfa</a>
         <a href="#hizmetler">Hizmetler</a>
         <a href="#market">Market Plus</a>
         <a href="#utts">UTTS</a>
+        <a href="#hijyen">Hijyen Alanı</a>
         <a href="#iletisim">İletişim</a>
-        <a class="nav-pay" href="https://turhanpetrol.com/odeme" target="_blank" rel="noopener">Ödeme</a>
       </nav>
-      <button id="menuBtn" class="menu-btn" aria-label="Menüyü aç">☰</button>
+      <div class="nav-actions">
+        <a class="wa-mini" href="https://wa.me/905336970531" target="_blank">WhatsApp</a>
+        <button class="menu-btn" id="menuBtn">☰</button>
+      </div>
     </div>
-    <nav id="mobileNav" class="mobile-nav">
+    <div class="container mobile-panel" id="mobilePanel">
       <a href="#anasayfa">Ana Sayfa</a>
       <a href="#hizmetler">Hizmetler</a>
       <a href="#market">Market Plus</a>
       <a href="#utts">UTTS</a>
+      <a href="#hijyen">Hijyen Alanı</a>
       <a href="#iletisim">İletişim</a>
-      <a href="https://turhanpetrol.com/odeme" target="_blank" rel="noopener">Ödeme</a>
-    </nav>
+      <a href="https://turhanpetrol.com/odeme" target="_blank">Ödeme Sayfası</a>
+    </div>
   </header>
 
-  <main>
-    <section id="anasayfa" class="hero">
-      <img class="hero-bg" src="assets/img/hero-station.jpeg" alt="Turhan Akaryakıt istasyon görünümü" />
-      <div class="hero-overlay"></div>
-      <div class="container hero-content">
-        <span class="eyebrow">Karapınar / Konya</span>
-        <h1>Turhan Akaryakıt</h1>
-        <p class="lead">Petrol Ofisi & BP güvencesiyle akaryakıt, Ultra Plus Market, Tchibo kahve ve UTTS montaj hizmeti bir arada.</p>
+  <section class="hero" id="anasayfa">
+    <div class="hero-bg">
+      <div class="slide active" style="background-image:url('images/hero-station.jpeg')"></div>
+      <div class="slide" style="background-image:url('images/station-front.jpeg')"></div>
+      <div class="slide" style="background-image:url('images/station-night-front.jpeg')"></div>
+      <div class="slide" style="background-image:url('images/station-alt.jpeg')"></div>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <div class="eyebrow">⛽ Petrol Ofisi & BP Güvencesi</div>
+        <h1>Turhan<br>Akaryakıt</h1>
+        <p class="lead">Karapınar / Konya’da akaryakıt, Ultra Plus Market, Tchibo kahve, UTTS montaj servisi, oto yıkama ve modern sosyal alanları tek noktada sunuyoruz.</p>
         <div class="hero-badges">
           <span>Akaryakıt & Otogaz</span>
           <span>Ultra Plus Market</span>
@@ -49,137 +160,158 @@
         </div>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#iletisim">İletişime Geç</a>
-          <a class="btn btn-light" href="https://maps.app.goo.gl/qP37bb31LNHwsw4eA?g_st=ic" target="_blank" rel="noopener">Konuma Git</a>
+          <a class="btn btn-light" href="https://maps.app.goo.gl/qP37bb31LNHwsw4eA?g_st=ic" target="_blank">Konumumuza Gel</a>
+          <a class="btn btn-secondary" href="https://turhanpetrol.com/odeme" target="_blank">Ödeme Sayfası</a>
         </div>
       </div>
-    </section>
-
-    <section id="hizmetler" class="section">
-      <div class="container">
-        <div class="section-head">
-          <span class="mini-title">Markalarımız</span>
-          <h2>İstasyon, market, kahve ve daha fazlası</h2>
+      <div class="hero-card">
+        <h3>Hızlı Bilgi</h3>
+        <div class="hero-metrics">
+          <div class="metric"><b>7/24</b><span>Akaryakıt ve market hizmeti</span></div>
+          <div class="metric"><b>UTTS</b><span>Yetkili montaj servisi</span></div>
+          <div class="metric"><b>Tchibo</b><span>Kahve ve dinlenme alanı</span></div>
+          <div class="metric"><b>Konfor</b><span>Modern WC ve lavabo alanı</span></div>
         </div>
-        <div class="brand-strip">
-          <img src="assets/img/petrol-bp.png" alt="Petrol Ofisi ve BP logoları" />
-          <img src="assets/img/tchibo-logo.png" alt="Tchibo logosu" class="tchibo-only" />
-        </div>
-        <div class="feature-grid">
-          <article class="feature-card">
-            <img src="assets/img/station-front.jpeg" alt="Akaryakıt ve otogaz alanı" />
-            <div class="card-body">
-              <h3>Akaryakıt & Otogaz</h3>
-              <p>Modern altyapı, geniş manevra alanı ve hızlı hizmet ile güvenli akaryakıt deneyimi.</p>
-            </div>
-          </article>
-          <article class="feature-card">
-            <img src="assets/img/market-wide.jpeg" alt="Ultra Plus Market ve Tchibo alanı" />
-            <div class="card-body">
-              <h3>Ultra Plus Market</h3>
-              <p>Atıştırmalık, içecek, market ürünleri ve sıcak kahve seçenekleri tek noktada.</p>
-            </div>
-          </article>
-          <article class="feature-card">
-            <img src="assets/img/station-alt.jpeg" alt="UTTS ve istasyon hizmetleri" />
-            <div class="card-body">
-              <h3>UTTS Bölge Anabayi</h3>
-              <p>Yetkili taşıt montaj servisi ve bölgesel destek hizmetleri ile profesyonel çözüm.</p>
-            </div>
-          </article>
-        </div>
+        <div class="contact-line">📞 0332 755 74 34</div>
+        <div class="contact-line">💬 0533 697 05 31</div>
+        <div class="contact-line">📍 Karapınar / Konya</div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section id="market" class="section section-soft">
-      <div class="container split">
-        <div class="split-text">
-          <span class="mini-title">Market Plus & Tchibo</span>
-          <h2>Dinlenme, kahve ve market deneyimi</h2>
+  <section class="section alt" id="hizmetler">
+    <div class="container">
+      <h2 class="section-title">Markalarımız & Hizmetlerimiz</h2>
+      <p class="section-sub">Güçlü marka iş birlikleri, geniş ürün çeşitliliği, kurumsal hizmet anlayışı ve modern istasyon yapısıyla yolculuğunuza konfor katıyoruz.</p>
+      <div class="brands">
+        <div class="brand-pill"><img src="images/petrol-bp.png" alt="Petrol Ofisi BP" onerror="this.src='images/bp-po.png'"></div>
+        <div class="brand-pill"><img src="images/tchibo-logo.png" alt="Tchibo"></div>
+      </div>
+      <div class="service-grid">
+        <article class="service-card">
+          <img src="images/station-front.jpeg" alt="İstasyon görünümü">
+          <div class="content"><h3>Akaryakıt & Otogaz</h3><p>Modern altyapı, geniş manevra alanı ve hızlı hizmet ile güvenli akaryakıt deneyimi.</p></div>
+        </article>
+        <article class="service-card">
+          <img src="images/market-counter.jpeg" alt="Market Plus">
+          <div class="content"><h3>Ultra Plus Market</h3><p>Atıştırmalık, içecek, market ürünleri ve sıcak kahve seçenekleri tek noktada.</p></div>
+        </article>
+        <article class="service-card">
+          <img src="images/station-alt.jpeg" alt="UTTS">
+          <div class="content"><h3>UTTS Bölge Anabayi</h3><p>Yetkili taşıt montaj servisi ve bölgesel destek hizmetleri ile profesyonel çözüm.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="market">
+    <div class="container">
+      <h2 class="section-title">Market Plus & Tchibo</h2>
+      <p class="section-sub">Günlük ihtiyaçlar, geniş ürün çeşitliliği, dinlenme alanı ve Tchibo kahve deneyimiyle mola noktası olmaktan fazlasını sunuyoruz.</p>
+      <div class="feature-band">
+        <div class="copy">
+          <h3>Dinlenme, kahve ve market deneyimi</h3>
           <p>Ultra Plus Market içinde günlük ihtiyaçlar, içecekler, atıştırmalıklar ve Tchibo kahve seçenekleriyle yolculuğunuza keyifli bir mola verin.</p>
-          <ul class="check-list">
+          <ul class="list">
             <li>Geniş ürün çeşitliliği</li>
             <li>Tchibo kahve ve sıcak içecekler</li>
             <li>Ferahlık sunan oturma alanı</li>
+            <li>Ödeme sayfasına hızlı yönlendirme</li>
           </ul>
-          <div class="inline-actions">
-            <a class="btn btn-primary" href="https://turhanpetrol.com/odeme" target="_blank" rel="noopener">Ödeme Sayfası</a>
-            <a class="btn btn-outline" href="https://wa.me/905336970531" target="_blank" rel="noopener">WhatsApp</a>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://turhanpetrol.com/odeme" target="_blank">Ödeme Sayfası</a>
+            <a class="btn btn-light" href="https://wa.me/905336970531" target="_blank">WhatsApp</a>
           </div>
         </div>
-        <div class="gallery-grid">
-          <img src="assets/img/market-counter.jpeg" alt="Market içi görsel" />
-          <img src="assets/img/market-aisle.jpeg" alt="Market koridor görseli" />
-          <img src="assets/img/seating.jpeg" alt="Oturma alanı" />
-          <img src="assets/img/tchibo-cups.webp" alt="Tchibo kahve" />
-        </div>
+        <img src="images/market-wide.jpeg" alt="Market geniş görünüm">
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section id="utts" class="section">
-      <div class="container split reverse">
-        <div class="split-text">
-          <span class="mini-title">UTTS</span>
-          <h2>Yetkili taşıt montaj servisi</h2>
-          <p>UTTS montaj ve bölge anabayi hizmetiyle kurumsal ve bireysel ihtiyaçlara hızlı destek sağlanır.</p>
-          <ul class="check-list">
+  <section class="section alt" id="utts">
+    <div class="container">
+      <h2 class="section-title">UTTS Yetkili Montaj Servisi</h2>
+      <p class="section-sub">Kurumsal ve bireysel ihtiyaçlara hızlı destek sağlıyor, istasyon içinde kolay erişim ve bölgesel hizmet avantajı sunuyoruz.</p>
+      <div class="feature-band reverse">
+        <img src="images/station-night-front.jpeg" alt="İstasyon gece görünümü">
+        <div class="copy">
+          <h3>Kurumsal çözüm, hızlı erişim</h3>
+          <p>UTTS montaj ve bölge anabayi hizmeti ile araç filoları ve bireysel kullanıcılar için pratik, hızlı ve güvenilir çözüm sunuyoruz.</p>
+          <ul class="list">
             <li>Bölgesel montaj desteği</li>
             <li>İstasyon içinde kolay erişim</li>
             <li>WhatsApp üzerinden hızlı bilgi</li>
           </ul>
-          <div class="inline-actions">
-            <a class="btn btn-primary" href="https://wa.me/905336970531" target="_blank" rel="noopener">UTTS Bilgi Al</a>
-            <a class="btn btn-outline" href="https://maps.app.goo.gl/qP37bb31LNHwsw4eA?g_st=ic" target="_blank" rel="noopener">Konum Aç</a>
-          </div>
-        </div>
-        <div class="utts-box">
-          <div class="utts-image-wrap">
-            <img src="assets/img/station-night-front.jpeg" alt="İstasyon ön cephe görünümü" />
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://wa.me/905336970531" target="_blank">UTTS Bilgi Al</a>
+            <a class="btn btn-light" href="https://maps.app.goo.gl/qP37bb31LNHwsw4eA?g_st=ic" target="_blank">Konum Aç</a>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="section section-soft">
-      <div class="container">
-        <div class="section-head">
-          <span class="mini-title">Hijyen Alanı</span>
-          <h2>Modern ve temiz kullanım alanları</h2>
-        </div>
-        <div class="feature-grid">
-          <article class="feature-card">
-            <img src="assets/img/wc-stalls.jpeg" alt="WC kabin alanı" />
-            <div class="card-body">
-              <h3>WC Alanı</h3>
-              <p>Düzenli, ferah ve modern tasarıma sahip kullanım alanları.</p>
-            </div>
-          </article>
-          <article class="feature-card">
-            <img src="assets/img/wc-sinks.jpeg" alt="Lavabo alanı" />
-            <div class="card-body">
-              <h3>Lavabo Alanı</h3>
-              <p>Şık, temiz ve kullanışlı lavabo bölümleriyle konforlu mola imkanı.</p>
-            </div>
-          </article>
-          <article class="feature-card contact-highlight" id="iletisim">
-            <div class="card-body">
-              <h3>İletişim</h3>
-              <p><strong>Sabit Hat:</strong> 0332 755 74 34</p>
-              <p><strong>Cep / WhatsApp:</strong> 0533 697 05 31</p>
-              <div class="stack-actions">
-                <a class="btn btn-primary" href="tel:03327557434">Hemen Ara</a>
-                <a class="btn btn-outline" href="https://wa.me/905336970531" target="_blank" rel="noopener">WhatsApp Yaz</a>
-                <a class="btn btn-outline" href="https://maps.app.goo.gl/qP37bb31LNHwsw4eA?g_st=ic" target="_blank" rel="noopener">Konum</a>
-                <a class="btn btn-primary" href="https://turhanpetrol.com/odeme" target="_blank" rel="noopener">Ödeme Sayfası</a>
-              </div>
-            </div>
-          </article>
+  <section class="section" id="hijyen">
+    <div class="container">
+      <h2 class="section-title">Hijyen Alanı</h2>
+      <p class="section-sub">Modern ve temiz kullanım alanlarıyla sürücüler ve yolcular için konforlu mola imkanı sunuyoruz.</p>
+      <div class="wc-grid">
+        <article class="wc-card">
+          <img src="images/wc-stalls.jpeg" alt="WC Alanı">
+          <div class="content"><h3>WC Alanı</h3><p>Düzenli, ferah ve modern tasarıma sahip kullanım alanları.</p></div>
+        </article>
+        <article class="wc-card">
+          <img src="images/wc-sinks.jpeg" alt="Lavabo Alanı">
+          <div class="content"><h3>Lavabo Alanı</h3><p>Şık, temiz ve kullanışlı lavabo bölümleriyle konforlu mola imkanı.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt" id="iletisim">
+    <div class="container contact-section">
+      <div class="contact-panel">
+        <h3>İletişim</h3>
+        <div class="contact-item"><small>Sabit Hat</small>0332 755 74 34</div>
+        <div class="contact-item"><small>Cep / WhatsApp</small>0533 697 05 31</div>
+        <div class="contact-actions">
+          <a class="btn btn-primary" href="tel:03327557434">Hemen Ara</a>
+          <a class="btn btn-primary" href="https://wa.me/905336970531" target="_blank">WhatsApp Yaz</a>
+          <a class="btn btn-light" href="https://maps.app.goo.gl/qP37bb31LNHwsw4eA?g_st=ic" target="_blank">Konum</a>
+          <a class="btn btn-light" href="https://turhanpetrol.com/odeme" target="_blank">Ödeme Sayfası</a>
         </div>
       </div>
-    </section>
-  </main>
+      <div class="map-panel">
+        <img src="images/seating.jpeg" alt="Dinlenme alanı">
+      </div>
+    </div>
+  </section>
 
-  <a class="floating-cta" href="https://wa.me/905336970531" target="_blank" rel="noopener">WhatsApp</a>
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>© 2026 Turhan Akaryakıt</div>
+      <div>Karapınar / Konya</div>
+      <div><a href="https://turhanpetrol.com/odeme" target="_blank">Ödeme Sayfası</a></div>
+    </div>
+  </footer>
 
-  <script src="assets/js/main.js"></script>
+  <a class="floating-wa" href="https://wa.me/905336970531" target="_blank">WhatsApp</a>
+
+  <script>
+    const slides = document.querySelectorAll('.hero-bg .slide');
+    let current = 0;
+    if (slides.length > 1) {
+      setInterval(() => {
+        slides[current].classList.remove('active');
+        current = (current + 1) % slides.length;
+        slides[current].classList.add('active');
+      }, 3500);
+    }
+    const menuBtn = document.getElementById('menuBtn');
+    const mobilePanel = document.getElementById('mobilePanel');
+    menuBtn.addEventListener('click', () => {
+      mobilePanel.classList.toggle('open');
+    });
+  </script>
 </body>
 </html>
