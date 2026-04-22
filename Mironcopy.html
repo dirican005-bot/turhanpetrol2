@@ -1,0 +1,1388 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MironPlus – Akaryakıt İstasyon Yönetimi</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+–bg: #0f1117;
+–bg2: #161b27;
+–bg3: #1e2535;
+–border: #2a3347;
+–accent: #f59e0b;
+–accent2: #3b82f6;
+–accent3: #10b981;
+–accent4: #ef4444;
+–text: #e2e8f0;
+–text2: #94a3b8;
+–text3: #64748b;
+–card: #1a2236;
+–sidebar-w: 220px;
+–radius: 10px;
+}
+
+- { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:‘Nunito’,sans-serif; background:var(–bg); color:var(–text); min-height:100vh; overflow-x:hidden; }
+
+/* ── LOGIN ── */
+#loginScreen {
+min-height:100vh; display:flex; align-items:center; justify-content:center;
+background: radial-gradient(ellipse at 30% 40%, #1a2a4a 0%, #0f1117 60%);
+}
+.login-box {
+background:var(–card); border:1px solid var(–border); border-radius:16px;
+padding:48px 40px; width:360px; box-shadow:0 24px 64px rgba(0,0,0,.5);
+}
+.login-logo { text-align:center; margin-bottom:32px; }
+.login-logo .logo-mark { font-size:40px; }
+.login-logo h1 { font-size:26px; font-weight:900; color:var(–accent); letter-spacing:1px; }
+.login-logo p { font-size:12px; color:var(–text3); margin-top:4px; }
+.login-box label { display:block; font-size:12px; font-weight:700; color:var(–text2); margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px; }
+.login-box input {
+width:100%; background:var(–bg3); border:1px solid var(–border); color:var(–text);
+padding:11px 14px; border-radius:8px; font-size:14px; font-family:‘Nunito’,sans-serif;
+outline:none; transition:.2s;
+}
+.login-box input:focus { border-color:var(–accent); }
+.form-group { margin-bottom:16px; }
+.btn-login {
+width:100%; background:var(–accent); color:#000; font-weight:800; font-size:15px;
+border:none; border-radius:8px; padding:13px; cursor:pointer; margin-top:8px;
+transition:.2s; font-family:‘Nunito’,sans-serif;
+}
+.btn-login:hover { background:#fbbf24; }
+.login-err { color:var(–accent4); font-size:13px; margin-top:10px; text-align:center; display:none; }
+
+/* ── APP SHELL ── */
+#app { display:none; }
+.shell { display:flex; height:100vh; }
+
+/* SIDEBAR */
+.sidebar {
+width:var(–sidebar-w); background:var(–bg2); border-right:1px solid var(–border);
+display:flex; flex-direction:column; flex-shrink:0; overflow-y:auto;
+}
+.sidebar-logo {
+padding:20px 16px 12px; border-bottom:1px solid var(–border);
+}
+.sidebar-logo .s-title { font-size:18px; font-weight:900; color:var(–accent); }
+.sidebar-logo .s-sub { font-size:10px; color:var(–text3); }
+.sidebar-logo .s-istasyon { font-size:11px; color:var(–text2); margin-top:6px; font-weight:700; }
+nav { flex:1; padding:8px 0; }
+.nav-section { font-size:10px; font-weight:800; color:var(–text3); padding:14px 16px 4px; text-transform:uppercase; letter-spacing:.8px; }
+.nav-item {
+display:flex; align-items:center; gap:10px; padding:9px 16px; cursor:pointer;
+font-size:13px; font-weight:600; color:var(–text2); border-left:3px solid transparent;
+transition:.15s; border-radius:0 6px 6px 0; margin:1px 8px 1px 0;
+}
+.nav-item:hover { background:var(–bg3); color:var(–text); }
+.nav-item.active { background:rgba(245,158,11,.1); color:var(–accent); border-left-color:var(–accent); }
+.nav-item .ni { font-size:16px; }
+.sidebar-footer { padding:14px 16px; border-top:1px solid var(–border); font-size:12px; color:var(–text3); }
+.sidebar-footer .usr { font-weight:700; color:var(–text2); }
+
+/* MAIN */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.topbar {
+background:var(–bg2); border-bottom:1px solid var(–border);
+padding:0 24px; height:56px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;
+}
+.topbar-title { font-size:17px; font-weight:800; }
+.topbar-right { display:flex; align-items:center; gap:12px; }
+.badge { background:var(–bg3); border:1px solid var(–border); border-radius:6px; padding:5px 12px; font-size:12px; font-weight:600; color:var(–text2); }
+.badge.green { background:rgba(16,185,129,.15); border-color:rgba(16,185,129,.3); color:var(–accent3); }
+.btn-logout { background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); color:var(–accent4); padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:700; font-family:‘Nunito’,sans-serif; transition:.2s; }
+.btn-logout:hover { background:rgba(239,68,68,.2); }
+
+.content { flex:1; overflow-y:auto; padding:24px; }
+
+/* CARDS */
+.stat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:14px; margin-bottom:24px; }
+.stat-card {
+background:var(–card); border:1px solid var(–border); border-radius:var(–radius);
+padding:16px; position:relative; overflow:hidden;
+}
+.stat-card::before { content:’’; position:absolute; top:0; left:0; right:0; height:3px; }
+.stat-card.y::before { background:var(–accent); }
+.stat-card.b::before { background:var(–accent2); }
+.stat-card.g::before { background:var(–accent3); }
+.stat-card.r::before { background:var(–accent4); }
+.stat-card .sc-label { font-size:11px; color:var(–text3); font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+.stat-card .sc-val { font-size:22px; font-weight:900; margin:6px 0 2px; }
+.stat-card .sc-sub { font-size:11px; color:var(–text3); }
+.stat-card .sc-icon { position:absolute; right:14px; top:50%; transform:translateY(-50%); font-size:28px; opacity:.15; }
+
+/* SECTION */
+.section-title { font-size:14px; font-weight:800; color:var(–text2); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+.section-title span { font-size:16px; }
+
+/* TABLE */
+.table-wrap { background:var(–card); border:1px solid var(–border); border-radius:var(–radius); overflow:hidden; margin-bottom:24px; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th { background:var(–bg3); color:var(–text2); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; padding:10px 14px; text-align:left; border-bottom:1px solid var(–border); }
+td { padding:10px 14px; border-bottom:1px solid rgba(42,51,71,.5); color:var(–text); }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:rgba(255,255,255,.02); }
+.pill { display:inline-block; padding:2px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+.pill.green { background:rgba(16,185,129,.15); color:var(–accent3); }
+.pill.yellow { background:rgba(245,158,11,.15); color:var(–accent); }
+.pill.red { background:rgba(239,68,68,.15); color:var(–accent4); }
+.pill.blue { background:rgba(59,130,246,.15); color:var(–accent2); }
+
+/* FORM */
+.form-panel { background:var(–card); border:1px solid var(–border); border-radius:var(–radius); padding:20px; margin-bottom:20px; }
+.form-row { display:grid; gap:14px; margin-bottom:14px; }
+.form-row.c2 { grid-template-columns:1fr 1fr; }
+.form-row.c3 { grid-template-columns:1fr 1fr 1fr; }
+.form-row.c4 { grid-template-columns:1fr 1fr 1fr 1fr; }
+.f-group label { display:block; font-size:11px; font-weight:700; color:var(–text2); margin-bottom:5px; text-transform:uppercase; }
+.f-group input, .f-group select, .f-group textarea {
+width:100%; background:var(–bg3); border:1px solid var(–border); color:var(–text);
+padding:9px 12px; border-radius:7px; font-size:13px; font-family:‘Nunito’,sans-serif;
+outline:none; transition:.2s;
+}
+.f-group input:focus, .f-group select:focus { border-color:var(–accent); }
+.f-group select option { background:var(–bg3); }
+
+/* BUTTONS */
+.btn { padding:9px 18px; border-radius:7px; font-size:13px; font-weight:700; cursor:pointer; border:none; font-family:‘Nunito’,sans-serif; transition:.2s; }
+.btn-primary { background:var(–accent); color:#000; }
+.btn-primary:hover { background:#fbbf24; }
+.btn-success { background:var(–accent3); color:#000; }
+.btn-danger { background:var(–accent4); color:#fff; }
+.btn-outline { background:transparent; border:1px solid var(–border); color:var(–text2); }
+.btn-outline:hover { border-color:var(–accent); color:var(–accent); }
+.btn-sm { padding:5px 12px; font-size:12px; }
+.btn-group { display:flex; gap:8px; flex-wrap:wrap; }
+
+/* TABS */
+.tabs { display:flex; gap:4px; margin-bottom:20px; border-bottom:1px solid var(–border); }
+.tab { padding:9px 18px; cursor:pointer; font-size:13px; font-weight:700; color:var(–text3); border-bottom:2px solid transparent; transition:.15s; }
+.tab.active { color:var(–accent); border-bottom-color:var(–accent); }
+.tab:hover { color:var(–text); }
+
+/* POMPA CARD */
+.pump-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin-bottom:24px; }
+.pump-card {
+background:var(–card); border:1px solid var(–border); border-radius:var(–radius);
+padding:18px; position:relative;
+}
+.pump-card .pump-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+.pump-card .pump-name { font-size:15px; font-weight:800; }
+.pump-card .pump-type { font-size:11px; color:var(–text3); }
+.pump-sayac { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.pump-sayac .ps { background:var(–bg3); border-radius:7px; padding:10px; }
+.pump-sayac .ps label { font-size:10px; color:var(–text3); font-weight:700; text-transform:uppercase; display:block; margin-bottom:3px; }
+.pump-sayac .ps input {
+background:transparent; border:none; color:var(–accent); font-size:16px; font-weight:800;
+font-family:‘JetBrains Mono’,monospace; width:100%; outline:none;
+}
+.pump-sayac .ps .diff { font-size:11px; color:var(–accent3); font-weight:700; margin-top:2px; }
+
+/* TANK */
+.tank-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; margin-bottom:24px; }
+.tank-card { background:var(–card); border:1px solid var(–border); border-radius:var(–radius); padding:18px; }
+.tank-card h3 { font-size:14px; font-weight:800; margin-bottom:12px; }
+.tank-bar-wrap { background:var(–bg3); border-radius:6px; height:12px; overflow:hidden; margin-bottom:6px; }
+.tank-bar { height:100%; border-radius:6px; transition:.5s; }
+.tank-bar.y { background:var(–accent); }
+.tank-bar.b { background:var(–accent2); }
+.tank-bar.g { background:var(–accent3); }
+.tank-info { display:flex; justify-content:space-between; font-size:12px; color:var(–text2); }
+
+/* CARİ */
+.cari-row { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
+
+/* MODAL */
+.modal-overlay {
+position:fixed; inset:0; background:rgba(0,0,0,.7); display:flex; align-items:center;
+justify-content:center; z-index:1000; display:none;
+}
+.modal-overlay.open { display:flex; }
+.modal {
+background:var(–bg2); border:1px solid var(–border); border-radius:14px;
+padding:28px; width:520px; max-width:95vw; max-height:90vh; overflow-y:auto;
+}
+.modal-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+.modal-head h2 { font-size:17px; font-weight:800; }
+.modal-close { background:var(–bg3); border:1px solid var(–border); color:var(–text2); width:30px; height:30px; border-radius:6px; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; }
+
+/* ALERT */
+.alert { padding:12px 16px; border-radius:8px; font-size:13px; font-weight:600; margin-bottom:16px; display:none; }
+.alert.show { display:block; }
+.alert.success { background:rgba(16,185,129,.15); border:1px solid rgba(16,185,129,.3); color:var(–accent3); }
+.alert.error { background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.3); color:var(–accent4); }
+
+/* PAGE */
+.page { display:none; }
+.page.active { display:block; }
+
+/* RAPOR */
+.rapor-box { background:var(–card); border:1px solid var(–border); border-radius:var(–radius); padding:20px; }
+.rapor-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(42,51,71,.5); font-size:13px; }
+.rapor-row:last-child { border-bottom:none; font-weight:800; font-size:14px; }
+.rapor-row .rr-label { color:var(–text2); }
+.rapor-row .rr-val { font-weight:700; font-family:‘JetBrains Mono’,monospace; }
+.rapor-row .rr-val.pos { color:var(–accent3); }
+.rapor-row .rr-val.neg { color:var(–accent4); }
+
+/* FIYAT */
+.fiyat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; margin-bottom:20px; }
+.fiyat-card { background:var(–card); border:1px solid var(–border); border-radius:var(–radius); padding:18px; }
+.fiyat-card h3 { font-size:13px; font-weight:800; color:var(–text2); margin-bottom:10px; }
+.fiyat-val { font-size:28px; font-weight:900; color:var(–accent); font-family:‘JetBrains Mono’,monospace; }
+.fiyat-val span { font-size:14px; color:var(–text3); }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:var(–bg); }
+::-webkit-scrollbar-thumb { background:var(–border); border-radius:3px; }
+
+/* RESPONSIVE */
+@media(max-width:768px) {
+.sidebar { width:60px; }
+.sidebar-logo .s-title, .sidebar-logo .s-sub, .sidebar-logo .s-istasyon, .nav-item span:not(.ni), .nav-section, .sidebar-footer { display:none; }
+.nav-item { justify-content:center; padding:12px; }
+.form-row.c2, .form-row.c3, .form-row.c4 { grid-template-columns:1fr; }
+}
+</style>
+
+</head>
+<body>
+
+<!-- LOGIN -->
+
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="logo-mark">⛽</div>
+      <h1>MironPlus</h1>
+      <p>Akaryakıt İstasyon Yönetim Sistemi</p>
+    </div>
+    <div class="form-group">
+      <label>Kullanıcı Adı</label>
+      <input type="text" id="loginUser" placeholder="Kullanıcı adı" value="demo">
+    </div>
+    <div class="form-group">
+      <label>Şifre</label>
+      <input type="password" id="loginPass" placeholder="Şifre" value="1234">
+    </div>
+    <button class="btn-login" onclick="doLogin()">Giriş Yap</button>
+    <div class="login-err" id="loginErr">Kullanıcı adı veya şifre hatalı!</div>
+  </div>
+</div>
+
+<!-- APP -->
+
+<div id="app">
+<div class="shell">
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="s-title">⛽ MironPlus</div>
+    <div class="s-sub">v2.4.1</div>
+    <div class="s-istasyon">Turhan Akaryakıt</div>
+  </div>
+  <nav>
+    <div class="nav-section">Ana Menü</div>
+    <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="ni">🏠</span><span>Gösterge Paneli</span></div>
+    <div class="nav-item" onclick="showPage('vardiya',this)"><span class="ni">🔄</span><span>Vardiya</span></div>
+    <div class="nav-item" onclick="showPage('pompalar',this)"><span class="ni">⛽</span><span>Pompalar</span></div>
+    <div class="nav-section">Stok & Satış</div>
+    <div class="nav-item" onclick="showPage('stok',this)"><span class="ni">🛢️</span><span>Tank / Stok</span></div>
+    <div class="nav-item" onclick="showPage('satis',this)"><span class="ni">💰</span><span>Satışlar</span></div>
+    <div class="nav-item" onclick="showPage('fiyat',this)"><span class="ni">🏷️</span><span>Yakıt Fiyatları</span></div>
+    <div class="nav-section">Finans</div>
+    <div class="nav-item" onclick="showPage('cari',this)"><span class="ni">👤</span><span>Cari Hesaplar</span></div>
+    <div class="nav-item" onclick="showPage('tahsilat',this)"><span class="ni">💳</span><span>Tahsilat</span></div>
+    <div class="nav-item" onclick="showPage('gider',this)"><span class="ni">📤</span><span>Giderler</span></div>
+    <div class="nav-section">Raporlar</div>
+    <div class="nav-item" onclick="showPage('rapor',this)"><span class="ni">📊</span><span>Raporlar</span></div>
+    <div class="nav-item" onclick="showPage('personel',this)"><span class="ni">👷</span><span>Personel</span></div>
+  </nav>
+  <div class="sidebar-footer"><span class="usr">demo</span><br>Yönetici</div>
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">Gösterge Paneli</div>
+    <div class="topbar-right">
+      <div class="badge green" id="vardiyaBadge">● Vardiya Açık</div>
+      <div class="badge" id="clockBadge">--:--</div>
+      <button class="btn-logout" onclick="doLogout()">Çıkış</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+```
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+  <div class="stat-grid" id="dashStats"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px" id="dashGrids">
+    <div>
+      <div class="section-title"><span>⛽</span> Bugünkü Pompa Özeti</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Pompa</th><th>Yakıt</th><th>Litre</th><th>Tutar</th></tr></thead>
+          <tbody id="dashPompaTable"></tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="section-title"><span>👤</span> Son Cari İşlemler</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Müşteri</th><th>İşlem</th><th>Tutar</th></tr></thead>
+          <tbody id="dashCariTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="section-title"><span>🛢️</span> Tank Durumu</div>
+    <div class="tank-grid" id="dashTankGrid"></div>
+  </div>
+</div>
+
+<!-- VARDİYA -->
+<div class="page" id="page-vardiya">
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('vardiya','acik',this)">Açık Vardiya</div>
+    <div class="tab" onclick="switchTab('vardiya','gecmis',this)">Geçmiş Vardiyalar</div>
+  </div>
+  <div id="vardiya-tab-acik">
+    <div class="form-panel">
+      <div class="section-title"><span>🔄</span> Vardiya Bilgileri</div>
+      <div class="form-row c3">
+        <div class="f-group"><label>Vardiya No</label><input id="v_no" readonly></div>
+        <div class="f-group"><label>Personel</label>
+          <select id="v_personel"><option>Ali Yıldız</option><option>Mehmet Kaya</option><option>Fatma Demir</option></select>
+        </div>
+        <div class="f-group"><label>Başlangıç Saati</label><input type="time" id="v_saat"></div>
+      </div>
+      <div class="form-row c4" id="vardiyaSayaclar"></div>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="vardiyaKapat()">💾 Vardiyayı Kapat & Kaydet</button>
+        <button class="btn btn-outline" onclick="vardiyaRapor()">📄 Vardiya Raporu</button>
+      </div>
+    </div>
+    <div class="alert" id="vardiyaAlert"></div>
+    <div class="section-title"><span>📋</span> Açık Vardiya Satışları</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Saat</th><th>Pompa</th><th>Yakıt</th><th>Litre</th><th>Birim Fiyat</th><th>Tutar</th><th>Ödeme</th></tr></thead>
+        <tbody id="vardiyaSatisTable"></tbody>
+      </table>
+    </div>
+  </div>
+  <div id="vardiya-tab-gecmis" style="display:none">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Vardiya No</th><th>Tarih</th><th>Personel</th><th>Başlangıç</th><th>Bitiş</th><th>Toplam Satış</th><th>Durum</th></tr></thead>
+        <tbody id="gecmisVardiyaTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- POMPALAR -->
+<div class="page" id="page-pompalar">
+  <div class="section-title"><span>⛽</span> Pompa Sayaç Girişi</div>
+  <div class="pump-grid" id="pumpaGrid"></div>
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="pompaKaydet()">💾 Sayaçları Kaydet</button>
+    <button class="btn btn-outline" onclick="pompaSifirla()">↺ Sıfırla</button>
+  </div>
+  <div class="alert" id="pompaAlert"></div>
+  <br>
+  <div class="section-title"><span>📋</span> Sayaç Geçmişi</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tarih</th><th>Pompa</th><th>Açılış</th><th>Kapanış</th><th>Litre</th><th>Tutar</th></tr></thead>
+      <tbody id="pompaGecmisTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- STOK -->
+<div class="page" id="page-stok">
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('stok','durum',this)">Tank Durumu</div>
+    <div class="tab" onclick="switchTab('stok','ikmal',this)">İkmal Girişi</div>
+    <div class="tab" onclick="switchTab('stok','hareket',this)">Stok Hareketleri</div>
+  </div>
+  <div id="stok-tab-durum">
+    <div class="tank-grid" id="stokTankGrid"></div>
+    <div class="section-title"><span>⚠️</span> Kritik Seviye Takibi</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tank</th><th>Yakıt</th><th>Kapasite</th><th>Mevcut</th><th>%</th><th>Durum</th></tr></thead>
+        <tbody id="tankDurumTable"></tbody>
+      </table>
+    </div>
+  </div>
+  <div id="stok-tab-ikmal" style="display:none">
+    <div class="form-panel">
+      <div class="section-title"><span>🚚</span> Yakıt İkmal Girişi</div>
+      <div class="form-row c3">
+        <div class="f-group"><label>Tarih</label><input type="date" id="ikmal_tarih"></div>
+        <div class="f-group"><label>Yakıt Cinsi</label>
+          <select id="ikmal_yakit"><option value="benzin">Kurşunsuz Benzin 95</option><option value="motorin">Motorin</option><option value="lpg">LPG</option></select>
+        </div>
+        <div class="f-group"><label>Gelen Litre</label><input type="number" id="ikmal_litre" placeholder="0.00"></div>
+      </div>
+      <div class="form-row c3">
+        <div class="f-group"><label>Birim Maliyet (₺)</label><input type="number" id="ikmal_maliyet" placeholder="0.00"></div>
+        <div class="f-group"><label>Fatura No</label><input id="ikmal_fatura" placeholder="FAT-001"></div>
+        <div class="f-group"><label>Tedarikçi</label><input id="ikmal_tedarik" placeholder="Tedarikçi adı"></div>
+      </div>
+      <button class="btn btn-primary" onclick="ikmalKaydet()">💾 İkmal Kaydet</button>
+    </div>
+    <div class="alert" id="ikmalAlert"></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tarih</th><th>Yakıt</th><th>Litre</th><th>Maliyet</th><th>Toplam</th><th>Fatura No</th></tr></thead>
+        <tbody id="ikmalTable"></tbody>
+      </table>
+    </div>
+  </div>
+  <div id="stok-tab-hareket" style="display:none">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tarih</th><th>İşlem</th><th>Yakıt</th><th>Litre</th><th>Kalan</th></tr></thead>
+        <tbody id="stokHareketTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- SATIŞ -->
+<div class="page" id="page-satis">
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('satis','giris',this)">Satış Girişi</div>
+    <div class="tab" onclick="switchTab('satis','liste',this)">Satış Listesi</div>
+  </div>
+  <div id="satis-tab-giris">
+    <div class="form-panel">
+      <div class="section-title"><span>💰</span> Satış Girişi</div>
+      <div class="form-row c4">
+        <div class="f-group"><label>Tarih</label><input type="date" id="s_tarih"></div>
+        <div class="f-group"><label>Saat</label><input type="time" id="s_saat"></div>
+        <div class="f-group"><label>Pompa</label>
+          <select id="s_pompa"><option>Pompa 1</option><option>Pompa 2</option><option>Pompa 3</option><option>Pompa 4</option></select>
+        </div>
+        <div class="f-group"><label>Yakıt</label>
+          <select id="s_yakit" onchange="satisHesapla()"><option value="benzin">Kurşunsuz 95</option><option value="motorin">Motorin</option><option value="lpg">LPG</option></select>
+        </div>
+      </div>
+      <div class="form-row c4">
+        <div class="f-group"><label>Litre</label><input type="number" id="s_litre" placeholder="0.00" oninput="satisHesapla()"></div>
+        <div class="f-group"><label>Birim Fiyat (₺)</label><input type="number" id="s_fiyat" placeholder="0.00" oninput="satisHesapla()"></div>
+        <div class="f-group"><label>Tutar (₺)</label><input type="number" id="s_tutar" placeholder="0.00" readonly style="color:var(--accent);font-weight:800"></div>
+        <div class="f-group"><label>Ödeme Tipi</label>
+          <select id="s_odeme" onchange="toggleCari()"><option value="nakit">Nakit</option><option value="kart">Kredi Kartı</option><option value="cari">Cari Hesap</option><option value="havale">Havale/EFT</option></select>
+        </div>
+      </div>
+      <div class="form-row c2" id="cariRow" style="display:none">
+        <div class="f-group"><label>Cari Hesap</label>
+          <select id="s_cari"><option value="">Seçiniz...</option></select>
+        </div>
+        <div class="f-group"><label>Araç Plaka</label><input id="s_plaka" placeholder="34 ABC 123"></div>
+      </div>
+      <button class="btn btn-primary" onclick="satisKaydet()">💾 Satış Kaydet</button>
+    </div>
+    <div class="alert" id="satisAlert"></div>
+  </div>
+  <div id="satis-tab-liste" style="display:none">
+    <div class="form-panel">
+      <div class="form-row c3">
+        <div class="f-group"><label>Başlangıç</label><input type="date" id="sf_bas"></div>
+        <div class="f-group"><label>Bitiş</label><input type="date" id="sf_bit"></div>
+        <div class="f-group"><label>Yakıt</label>
+          <select id="sf_yakit"><option value="">Tümü</option><option value="benzin">Benzin 95</option><option value="motorin">Motorin</option><option value="lpg">LPG</option></select>
+        </div>
+      </div>
+      <div class="btn-group"><button class="btn btn-primary btn-sm" onclick="satisFiltrele()">🔍 Filtrele</button><button class="btn btn-outline btn-sm" onclick="satisFiltrele()">↺ Tümü</button></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tarih/Saat</th><th>Pompa</th><th>Yakıt</th><th>Litre</th><th>Fiyat</th><th>Tutar</th><th>Ödeme</th><th>Cari</th></tr></thead>
+        <tbody id="satisListeTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- FİYAT -->
+<div class="page" id="page-fiyat">
+  <div class="fiyat-grid" id="fiyatCards"></div>
+  <div class="form-panel">
+    <div class="section-title"><span>🏷️</span> Fiyat Güncelle</div>
+    <div class="form-row c3">
+      <div class="f-group"><label>Yakıt Cinsi</label>
+        <select id="fiyat_yakit"><option value="benzin">Kurşunsuz Benzin 95</option><option value="motorin">Motorin</option><option value="lpg">LPG</option></select>
+      </div>
+      <div class="f-group"><label>Yeni Fiyat (₺/Lt)</label><input type="number" id="fiyat_yeni" placeholder="0.00" step="0.001"></div>
+      <div class="f-group"><label>Geçerlilik Tarihi</label><input type="date" id="fiyat_tarih"></div>
+    </div>
+    <button class="btn btn-primary" onclick="fiyatGuncelle()">💾 Fiyatı Güncelle</button>
+  </div>
+  <div class="alert" id="fiyatAlert"></div>
+  <div class="section-title"><span>📋</span> Fiyat Geçmişi</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tarih</th><th>Yakıt</th><th>Fiyat (₺/Lt)</th><th>Değişim</th></tr></thead>
+      <tbody id="fiyatGecmisTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CARİ -->
+<div class="page" id="page-cari">
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('cari','liste',this)">Cari Listesi</div>
+    <div class="tab" onclick="switchTab('cari','yeni',this)">Yeni Cari</div>
+    <div class="tab" onclick="switchTab('cari','ekstra',this)">Ekstre</div>
+  </div>
+  <div id="cari-tab-liste">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Kodu</th><th>Adı</th><th>Telefon</th><th>Bakiye</th><th>Limit</th><th>Durum</th><th>İşlem</th></tr></thead>
+        <tbody id="cariListeTable"></tbody>
+      </table>
+    </div>
+  </div>
+  <div id="cari-tab-yeni" style="display:none">
+    <div class="form-panel">
+      <div class="section-title"><span>👤</span> Yeni Cari Hesap</div>
+      <div class="form-row c3">
+        <div class="f-group"><label>Cari Kodu</label><input id="c_kod" placeholder="CAR-001"></div>
+        <div class="f-group"><label>Adı / Unvanı</label><input id="c_ad" placeholder="Müşteri adı"></div>
+        <div class="f-group"><label>Telefon</label><input id="c_tel" placeholder="0555 555 5555"></div>
+      </div>
+      <div class="form-row c3">
+        <div class="f-group"><label>TC / Vergi No</label><input id="c_vkn" placeholder=""></div>
+        <div class="f-group"><label>Kredi Limiti (₺)</label><input type="number" id="c_limit" placeholder="10000"></div>
+        <div class="f-group"><label>Tipi</label>
+          <select id="c_tip"><option>Bireysel</option><option>Kurumsal</option><option>Resmi</option></select>
+        </div>
+      </div>
+      <div class="f-group" style="margin-bottom:14px"><label>Adres</label><input id="c_adres" placeholder="Adres"></div>
+      <button class="btn btn-primary" onclick="cariKaydet()">💾 Cari Kaydet</button>
+    </div>
+    <div class="alert" id="cariAlert"></div>
+  </div>
+  <div id="cari-tab-ekstra" style="display:none">
+    <div class="form-panel">
+      <div class="form-row c2">
+        <div class="f-group"><label>Cari Seç</label>
+          <select id="ekstra_cari" onchange="cariEkstreYukle()"><option value="">Seçiniz...</option></select>
+        </div>
+        <div class="f-group"><label>Dönem</label>
+          <select id="ekstra_donem"><option value="bu_ay">Bu Ay</option><option value="gecen_ay">Geçen Ay</option><option value="tumü">Tümü</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tarih</th><th>Açıklama</th><th>Borç</th><th>Alacak</th><th>Bakiye</th></tr></thead>
+        <tbody id="ekstreTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- TAHSİLAT -->
+<div class="page" id="page-tahsilat">
+  <div class="form-panel">
+    <div class="section-title"><span>💳</span> Tahsilat Girişi</div>
+    <div class="form-row c4">
+      <div class="f-group"><label>Tarih</label><input type="date" id="t_tarih"></div>
+      <div class="f-group"><label>Cari</label>
+        <select id="t_cari"><option value="">Seçiniz...</option></select>
+      </div>
+      <div class="f-group"><label>Tutar (₺)</label><input type="number" id="t_tutar" placeholder="0.00"></div>
+      <div class="f-group"><label>Ödeme Tipi</label>
+        <select id="t_tip"><option value="nakit">Nakit</option><option value="kart">Kredi Kartı</option><option value="havale">Havale/EFT</option><option value="cek">Çek</option></select>
+      </div>
+    </div>
+    <div class="f-group" style="margin-bottom:14px"><label>Açıklama</label><input id="t_aciklama" placeholder="Tahsilat açıklaması"></div>
+    <button class="btn btn-primary" onclick="tahsilatKaydet()">💾 Tahsilat Kaydet</button>
+  </div>
+  <div class="alert" id="tahsilatAlert"></div>
+  <div class="section-title"><span>📋</span> Tahsilat Listesi</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tarih</th><th>Cari</th><th>Tutar</th><th>Tip</th><th>Açıklama</th></tr></thead>
+      <tbody id="tahsilatTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- GİDER -->
+<div class="page" id="page-gider">
+  <div class="form-panel">
+    <div class="section-title"><span>📤</span> Gider Girişi</div>
+    <div class="form-row c4">
+      <div class="f-group"><label>Tarih</label><input type="date" id="g_tarih"></div>
+      <div class="f-group"><label>Kategori</label>
+        <select id="g_kat">
+          <option>Personel Maaş</option><option>Kira</option><option>Elektrik</option>
+          <option>Su</option><option>Doğalgaz</option><option>Bakım/Onarım</option>
+          <option>Vergi</option><option>Sigorta</option><option>Diğer</option>
+        </select>
+      </div>
+      <div class="f-group"><label>Tutar (₺)</label><input type="number" id="g_tutar" placeholder="0.00"></div>
+      <div class="f-group"><label>Ödeme Tipi</label>
+        <select id="g_tip"><option>Nakit</option><option>Banka</option><option>Çek</option></select>
+      </div>
+    </div>
+    <div class="f-group" style="margin-bottom:14px"><label>Açıklama</label><input id="g_aciklama" placeholder="Gider açıklaması"></div>
+    <button class="btn btn-primary" onclick="giderKaydet()">💾 Gider Kaydet</button>
+  </div>
+  <div class="alert" id="giderAlert"></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tarih</th><th>Kategori</th><th>Tutar</th><th>Ödeme</th><th>Açıklama</th></tr></thead>
+      <tbody id="giderTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- RAPOR -->
+<div class="page" id="page-rapor">
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('rapor','gunluk',this)">Günlük</div>
+    <div class="tab" onclick="switchTab('rapor','aylik',this)">Aylık</div>
+    <div class="tab" onclick="switchTab('rapor','karol',this)">Kâr/Zarar</div>
+  </div>
+  <div id="rapor-tab-gunluk">
+    <div class="form-panel">
+      <div class="form-row c2">
+        <div class="f-group"><label>Tarih</label><input type="date" id="r_tarih"></div>
+        <div class="f-group" style="display:flex;align-items:flex-end">
+          <button class="btn btn-primary" onclick="raporYukle()">📊 Rapor Getir</button>
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div class="section-title"><span>💰</span> Satış Özeti</div>
+        <div class="rapor-box" id="gunlukSatisRapor"></div>
+      </div>
+      <div>
+        <div class="section-title"><span>📊</span> Ödeme Dağılımı</div>
+        <div class="rapor-box" id="gunlukOdemeRapor"></div>
+      </div>
+    </div>
+  </div>
+  <div id="rapor-tab-aylik" style="display:none">
+    <div class="form-panel">
+      <div class="form-row c2">
+        <div class="f-group"><label>Yıl</label><input type="number" id="r_yil" value="2025"></div>
+        <div class="f-group"><label>Ay</label>
+          <select id="r_ay">
+            <option value="1">Ocak</option><option value="2">Şubat</option><option value="3">Mart</option>
+            <option value="4">Nisan</option><option value="5">Mayıs</option><option value="6">Haziran</option>
+            <option value="7">Temmuz</option><option value="8">Ağustos</option><option value="9">Eylül</option>
+            <option value="10">Ekim</option><option value="11">Kasım</option><option value="12">Aralık</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="aylikRaporYukle()">📊 Aylık Rapor</button>
+    </div>
+    <div class="rapor-box" id="aylikRaporBox"></div>
+  </div>
+  <div id="rapor-tab-karol" style="display:none">
+    <div class="rapor-box" id="karolRaporBox"></div>
+  </div>
+</div>
+
+<!-- PERSONEL -->
+<div class="page" id="page-personel">
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('personel','liste',this)">Personel Listesi</div>
+    <div class="tab" onclick="switchTab('personel','yeni',this)">Yeni Personel</div>
+  </div>
+  <div id="personel-tab-liste">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Adı Soyadı</th><th>Pozisyon</th><th>Telefon</th><th>Vardiya</th><th>Maaş</th><th>Durum</th></tr></thead>
+        <tbody id="personelTable"></tbody>
+      </table>
+    </div>
+  </div>
+  <div id="personel-tab-yeni" style="display:none">
+    <div class="form-panel">
+      <div class="form-row c3">
+        <div class="f-group"><label>Adı Soyadı</label><input id="p_ad" placeholder="Ad Soyad"></div>
+        <div class="f-group"><label>Pozisyon</label>
+          <select id="p_poz"><option>Pompa Görevlisi</option><option>Şef</option><option>Muhasebe</option><option>Güvenlik</option></select>
+        </div>
+        <div class="f-group"><label>Telefon</label><input id="p_tel" placeholder="05xx xxx xxxx"></div>
+      </div>
+      <div class="form-row c3">
+        <div class="f-group"><label>TC Kimlik No</label><input id="p_tc" placeholder="xxxxxxxxxxx"></div>
+        <div class="f-group"><label>Maaş (₺)</label><input type="number" id="p_maas" placeholder="0"></div>
+        <div class="f-group"><label>Vardiya</label>
+          <select id="p_vardiya"><option>Sabah (06-14)</option><option>Öğle (14-22)</option><option>Gece (22-06)</option></select>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="personelKaydet()">💾 Personel Kaydet</button>
+    </div>
+    <div class="alert" id="personelAlert"></div>
+  </div>
+</div>
+```
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /shell -->
+</div><!-- /app -->
+
+<script>
+// ═══════════════════════════════════════════════
+// VERİ DEPOSU
+// ═══════════════════════════════════════════════
+const DB = {
+  fiyatlar: { benzin: 41.85, motorin: 43.20, lpg: 25.60 },
+  tanklar: [
+    { ad:'Tank-1 Benzin 95', yakit:'benzin', kapasite:30000, mevcut:18500, renk:'y' },
+    { ad:'Tank-2 Motorin', yakit:'motorin', kapasite:40000, mevcut:31200, renk:'b' },
+    { ad:'Tank-3 LPG', yakit:'lpg', kapasite:20000, mevcut:7800, renk:'g' }
+  ],
+  pompalar: [
+    { no:1, ad:'Pompa 1', yakit:'benzin', acilis:124560.00, kapanis:124560.00 },
+    { no:2, ad:'Pompa 2', yakit:'motorin', acilis:98340.00, kapanis:98340.00 },
+    { no:3, ad:'Pompa 3', yakit:'benzin', acilis:76210.00, kapanis:76210.00 },
+    { no:4, ad:'Pompa 4', yakit:'lpg', acilis:54890.00, kapanis:54890.00 }
+  ],
+  satislar: [
+    { tarih:'2025-05-12', saat:'08:14', pompa:'Pompa 1', yakit:'benzin', litre:45.2, fiyat:41.85, tutar:1891.62, odeme:'nakit', cari:'' },
+    { tarih:'2025-05-12', saat:'09:30', pompa:'Pompa 2', yakit:'motorin', litre:80.0, fiyat:43.20, tutar:3456.00, odeme:'cari', cari:'ABC Nakliyat' },
+    { tarih:'2025-05-12', saat:'10:55', pompa:'Pompa 3', yakit:'benzin', litre:30.5, fiyat:41.85, tutar:1276.43, odeme:'kart', cari:'' },
+    { tarih:'2025-05-11', saat:'14:22', pompa:'Pompa 4', yakit:'lpg', litre:60.0, fiyat:25.60, tutar:1536.00, odeme:'nakit', cari:'' },
+    { tarih:'2025-05-11', saat:'16:05', pompa:'Pompa 2', yakit:'motorin', litre:120.0, fiyat:43.20, tutar:5184.00, odeme:'cari', cari:'XYZ Lojistik' },
+  ],
+  cariler: [
+    { kod:'CAR-001', ad:'ABC Nakliyat A.Ş.', tel:'0332 501 00 01', vkn:'1234567890', limit:50000, bakiye:-8450.00, tip:'Kurumsal' },
+    { kod:'CAR-002', ad:'XYZ Lojistik Ltd.', tel:'0332 502 00 02', vkn:'9876543210', limit:30000, bakiye:-3200.00, tip:'Kurumsal' },
+    { kod:'CAR-003', ad:'Mehmet Yılmaz', tel:'0532 100 10 10', vkn:'12345678901', limit:5000, bakiye:-1500.00, tip:'Bireysel' },
+  ],
+  tahsilatlar: [
+    { tarih:'2025-05-10', cari:'ABC Nakliyat A.Ş.', tutar:5000.00, tip:'havale', aciklama:'Mayıs ödemesi' },
+    { tarih:'2025-05-09', cari:'XYZ Lojistik Ltd.', tutar:2000.00, tip:'nakit', aciklama:'' },
+  ],
+  giderler: [
+    { tarih:'2025-05-01', kat:'Personel Maaş', tutar:45000.00, tip:'Banka', aciklama:'Mayıs maaşları' },
+    { tarih:'2025-05-05', kat:'Elektrik', tutar:3200.00, tip:'Banka', aciklama:'' },
+    { tarih:'2025-05-05', kat:'Su', tutar:450.00, tip:'Nakit', aciklama:'' },
+  ],
+  ikmallar: [
+    { tarih:'2025-05-08', yakit:'motorin', litre:20000, maliyet:38.50, toplam:770000, fatura:'FAT-045' },
+    { tarih:'2025-05-06', yakit:'benzin', litre:15000, maliyet:37.20, toplam:558000, fatura:'FAT-044' },
+  ],
+  fiyatGecmis: [
+    { tarih:'2025-05-10', yakit:'benzin', fiyat:41.85, degisim:'+0.25' },
+    { tarih:'2025-05-05', yakit:'motorin', fiyat:43.20, degisim:'-0.15' },
+    { tarih:'2025-05-01', yakit:'lpg', fiyat:25.60, degisim:'+0.40' },
+  ],
+  personel: [
+    { ad:'Ali Yıldız', poz:'Pompa Görevlisi', tel:'0532 111 11 11', vardiya:'Sabah (06-14)', maas:20000, aktif:true },
+    { ad:'Mehmet Kaya', poz:'Pompa Görevlisi', tel:'0535 222 22 22', vardiya:'Öğle (14-22)', maas:20000, aktif:true },
+    { ad:'Fatma Demir', poz:'Şef', tel:'0538 333 33 33', vardiya:'Sabah (06-14)', maas:28000, aktif:true },
+  ],
+  vardiyaNo: 2451,
+  vardiyalar: [
+    { no:2450, tarih:'2025-05-11', personel:'Ali Yıldız', bas:'06:00', bit:'14:00', satisTopla:12450.00, durum:'Kapalı' },
+    { no:2449, tarih:'2025-05-10', personel:'Mehmet Kaya', bas:'14:00', bit:'22:00', satisTopla:9870.00, durum:'Kapalı' },
+  ]
+};
+
+// ═══════════════════════════════════════════════
+// GİRİŞ / ÇIKIŞ
+// ═══════════════════════════════════════════════
+function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value.trim();
+  if (u === 'demo' && p === '1234') {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initApp();
+  } else {
+    const e = document.getElementById('loginErr');
+    e.style.display = 'block';
+    setTimeout(() => e.style.display = 'none', 3000);
+  }
+}
+document.getElementById('loginUser').addEventListener('keydown', e => e.key==='Enter' && doLogin());
+document.getElementById('loginPass').addEventListener('keydown', e => e.key==='Enter' && doLogin());
+
+function doLogout() {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+}
+
+// ═══════════════════════════════════════════════
+// NAVİGASYON
+// ═══════════════════════════════════════════════
+const pageNames = { dashboard:'Gösterge Paneli', vardiya:'Vardiya', pompalar:'Pompalar', stok:'Tank / Stok', satis:'Satışlar', fiyat:'Yakıt Fiyatları', cari:'Cari Hesaplar', tahsilat:'Tahsilat', gider:'Giderler', rapor:'Raporlar', personel:'Personel' };
+
+function showPage(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  document.getElementById('topbarTitle').textContent = pageNames[id] || id;
+  loadPage(id);
+}
+
+function switchTab(page, tab, el) {
+  const containers = document.querySelectorAll(`[id^="${page}-tab-"]`);
+  containers.forEach(c => c.style.display = 'none');
+  const target = document.getElementById(`${page}-tab-${tab}`);
+  if(target) target.style.display = '';
+  const tabs = el.closest('.tabs').querySelectorAll('.tab');
+  tabs.forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  if(page==='satis' && tab==='liste') renderSatisListe();
+  if(page==='cari' && tab==='ekstra') populateCariSelect('ekstra_cari');
+  if(page==='rapor' && tab==='karol') renderKarolRapor();
+}
+
+// ═══════════════════════════════════════════════
+// SAAT
+// ═══════════════════════════════════════════════
+function updateClock() {
+  const now = new Date();
+  const str = now.toLocaleTimeString('tr-TR', { hour:'2-digit', minute:'2-digit' });
+  document.getElementById('clockBadge').textContent = str;
+}
+setInterval(updateClock, 10000);
+
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+function nowTime() {
+  return new Date().toLocaleTimeString('tr-TR', { hour:'2-digit', minute:'2-digit' });
+}
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+function initApp() {
+  updateClock();
+  loadPage('dashboard');
+  // Tarihleri doldur
+  const t = today();
+  ['ikmal_tarih','s_tarih','t_tarih','g_tarih','r_tarih','fiyat_tarih'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = t;
+  });
+  const hs = document.getElementById('s_saat');
+  if(hs) hs.value = nowTime().replace('.',':');
+  const vno = document.getElementById('v_no');
+  if(vno) vno.value = 'V-' + DB.vardiyaNo;
+  const vsaat = document.getElementById('v_saat');
+  if(vsaat) vsaat.value = nowTime().replace('.',':');
+  document.getElementById('r_yil').value = new Date().getFullYear();
+  document.getElementById('r_ay').value = new Date().getMonth()+1;
+  populateCariSelects();
+}
+
+function loadPage(id) {
+  switch(id) {
+    case 'dashboard': renderDashboard(); break;
+    case 'vardiya': renderVardiya(); break;
+    case 'pompalar': renderPompalar(); break;
+    case 'stok': renderStok(); break;
+    case 'satis': renderSatisGiris(); break;
+    case 'fiyat': renderFiyat(); break;
+    case 'cari': renderCari(); break;
+    case 'tahsilat': renderTahsilat(); break;
+    case 'gider': renderGider(); break;
+    case 'rapor': renderRapor(); break;
+    case 'personel': renderPersonel(); break;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════
+function renderDashboard() {
+  const bugun = DB.satislar.filter(s => s.tarih === today());
+  const toplamLitre = bugun.reduce((a,s) => a + s.litre, 0);
+  const toplamTutar = bugun.reduce((a,s) => a + s.tutar, 0);
+  const nakitTutar = bugun.filter(s => s.odeme==='nakit').reduce((a,s) => a + s.tutar, 0);
+  const cariTopla = DB.cariler.reduce((a,c) => a + Math.abs(c.bakiye), 0);
+
+  const stats = [
+    { label:'Bugün Satış Tutarı', val: fmt(toplamTutar)+'₺', sub:'Toplam satış', cls:'y', icon:'💰' },
+    { label:'Bugün Litre', val: toplamLitre.toFixed(1)+' Lt', sub:'Pompa toplamı', cls:'b', icon:'⛽' },
+    { label:'Nakit Tahsilat', val: fmt(nakitTutar)+'₺', sub:'Bugün nakit', cls:'g', icon:'💵' },
+    { label:'Cari Bakiye', val: fmt(cariTopla)+'₺', sub:'Toplam alacak', cls:'r', icon:'👤' },
+  ];
+  document.getElementById('dashStats').innerHTML = stats.map(s => `
+    <div class="stat-card ${s.cls}">
+      <div class="sc-label">${s.label}</div>
+      <div class="sc-val">${s.val}</div>
+      <div class="sc-sub">${s.sub}</div>
+      <div class="sc-icon">${s.icon}</div>
+    </div>`).join('');
+
+  const pompaRows = DB.pompalar.map(p => {
+    const ps = bugun.filter(s => s.pompa===p.ad);
+    const litre = ps.reduce((a,s)=>a+s.litre,0);
+    const tutar = ps.reduce((a,s)=>a+s.tutar,0);
+    return `<tr><td>${p.ad}</td><td>${yakitAd(p.yakit)}</td><td>${litre.toFixed(2)}</td><td>${fmt(tutar)}₺</td></tr>`;
+  }).join('');
+  document.getElementById('dashPompaTable').innerHTML = pompaRows || '<tr><td colspan="4" style="color:var(--text3);text-align:center">Bugün satış yok</td></tr>';
+
+  const cariRows = DB.tahsilatlar.slice(0,5).map(t =>
+    `<tr><td>${t.cari}</td><td><span class="pill green">Tahsilat</span></td><td>${fmt(t.tutar)}₺</td></tr>`
+  ).concat(DB.satislar.filter(s=>s.cari).slice(0,3).map(s =>
+    `<tr><td>${s.cari}</td><td><span class="pill blue">Satış</span></td><td>${fmt(s.tutar)}₺</td></tr>`
+  )).slice(0,6).join('');
+  document.getElementById('dashCariTable').innerHTML = cariRows;
+
+  document.getElementById('dashTankGrid').innerHTML = DB.tanklar.map(t => tankCard(t)).join('');
+}
+
+// ═══════════════════════════════════════════════
+// VARDİYA
+// ═══════════════════════════════════════════════
+function renderVardiya() {
+  const sc = document.getElementById('vardiyaSayaclar');
+  sc.innerHTML = DB.pompalar.map(p => `
+    <div class="f-group">
+      <label>${p.ad} Açılış</label>
+      <input type="number" id="vp_${p.no}" value="${p.acilis.toFixed(2)}" step="0.01">
+    </div>`).join('');
+
+  const bugunSatislar = DB.satislar.slice(0,3);
+  document.getElementById('vardiyaSatisTable').innerHTML = bugunSatislar.map(s =>
+    `<tr><td>${s.saat}</td><td>${s.pompa}</td><td>${yakitAd(s.yakit)}</td><td>${s.litre}</td><td>${s.fiyat}₺</td><td>${fmt(s.tutar)}₺</td><td><span class="pill ${odemeClass(s.odeme)}">${s.odeme}</span></td></tr>`
+  ).join('');
+
+  document.getElementById('gecmisVardiyaTable').innerHTML = DB.vardiyalar.map(v =>
+    `<tr><td>V-${v.no}</td><td>${v.tarih}</td><td>${v.personel}</td><td>${v.bas}</td><td>${v.bit}</td><td>${fmt(v.satisTopla)}₺</td><td><span class="pill green">${v.durum}</span></td></tr>`
+  ).join('');
+}
+
+function vardiyaKapat() {
+  const alert = document.getElementById('vardiyaAlert');
+  DB.vardiyalar.unshift({ no:DB.vardiyaNo, tarih:today(), personel:document.getElementById('v_personel').value, bas:document.getElementById('v_saat').value, bit:nowTime(), satisTopla:0, durum:'Kapalı' });
+  DB.vardiyaNo++;
+  document.getElementById('v_no').value = 'V-' + DB.vardiyaNo;
+  showAlert('vardiyaAlert', 'Vardiya başarıyla kapatıldı.', 'success');
+  document.getElementById('gecmisVardiyaTable').innerHTML = DB.vardiyalar.map(v =>
+    `<tr><td>V-${v.no}</td><td>${v.tarih}</td><td>${v.personel}</td><td>${v.bas}</td><td>${v.bit}</td><td>${fmt(v.satisTopla)}₺</td><td><span class="pill green">${v.durum}</span></td></tr>`
+  ).join('');
+}
+
+function vardiyaRapor() { alert('Vardiya raporu yazdırma özelliği aktif.'); }
+
+// ═══════════════════════════════════════════════
+// POMPALAR
+// ═══════════════════════════════════════════════
+function renderPompalar() {
+  document.getElementById('pumpaGrid').innerHTML = DB.pompalar.map(p => `
+    <div class="pump-card">
+      <div class="pump-head">
+        <div>
+          <div class="pump-name">${p.ad}</div>
+          <div class="pump-type">${yakitAd(p.yakit)}</div>
+        </div>
+        <span class="pill ${p.yakit==='benzin'?'yellow':p.yakit==='motorin'?'blue':'green'}">${yakitAd(p.yakit)}</span>
+      </div>
+      <div class="pump-sayac">
+        <div class="ps">
+          <label>Açılış</label>
+          <input type="number" id="pac_${p.no}" value="${p.acilis.toFixed(2)}" step="0.01">
+          <div class="diff">Önceki vardiya</div>
+        </div>
+        <div class="ps">
+          <label>Kapanış</label>
+          <input type="number" id="pkp_${p.no}" value="${p.kapanis.toFixed(2)}" step="0.01" oninput="calcDiff(${p.no})">
+          <div class="diff" id="pdiff_${p.no}">— Lt</div>
+        </div>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('pompaGecmisTable').innerHTML = DB.satislar.map(s =>
+    `<tr><td>${s.tarih}</td><td>${s.pompa}</td><td>${s.litre}</td><td>${s.litre}</td><td>${s.litre}</td><td>${fmt(s.tutar)}₺</td></tr>`
+  ).join('');
+}
+
+function calcDiff(no) {
+  const ac = parseFloat(document.getElementById('pac_'+no).value) || 0;
+  const kp = parseFloat(document.getElementById('pkp_'+no).value) || 0;
+  const diff = kp - ac;
+  const d = document.getElementById('pdiff_'+no);
+  if(d) d.textContent = (diff >= 0 ? '+' : '') + diff.toFixed(2) + ' Lt';
+}
+
+function pompaKaydet() {
+  DB.pompalar.forEach(p => {
+    const kp = parseFloat(document.getElementById('pkp_'+p.no)?.value) || p.kapanis;
+    p.acilis = p.kapanis;
+    p.kapanis = kp;
+  });
+  showAlert('pompaAlert', 'Pompa sayaçları kaydedildi.', 'success');
+}
+
+function pompaSifirla() { renderPompalar(); }
+
+// ═══════════════════════════════════════════════
+// STOK
+// ═══════════════════════════════════════════════
+function renderStok() {
+  document.getElementById('stokTankGrid').innerHTML = DB.tanklar.map(t => tankCard(t)).join('');
+  document.getElementById('tankDurumTable').innerHTML = DB.tanklar.map(t => {
+    const pct = Math.round((t.mevcut/t.kapasite)*100);
+    const cls = pct < 20 ? 'red' : pct < 40 ? 'yellow' : 'green';
+    return `<tr><td>${t.ad}</td><td>${yakitAd(t.yakit)}</td><td>${t.kapasite.toLocaleString()}</td><td>${t.mevcut.toLocaleString()}</td><td>${pct}%</td><td><span class="pill ${cls}">${pct<20?'Kritik':pct<40?'Düşük':'Normal'}</span></td></tr>`;
+  }).join('');
+  renderIkmalTable();
+  renderStokHareket();
+}
+
+function renderIkmalTable() {
+  document.getElementById('ikmalTable').innerHTML = DB.ikmallar.map(i =>
+    `<tr><td>${i.tarih}</td><td>${yakitAd(i.yakit)}</td><td>${i.litre.toLocaleString()}</td><td>${i.maliyet}₺</td><td>${fmt(i.toplam)}₺</td><td>${i.fatura}</td></tr>`
+  ).join('');
+}
+
+function renderStokHareket() {
+  const rows = [...DB.ikmallar.map(i => ({ tarih:i.tarih, islem:'İkmal (+)', yakit:i.yakit, litre:'+'+i.litre, kalan:'-' })),
+    ...DB.satislar.map(s => ({ tarih:s.tarih, islem:'Satış (-)', yakit:s.yakit, litre:'-'+s.litre, kalan:'-' }))
+  ].sort((a,b) => b.tarih.localeCompare(a.tarih));
+  document.getElementById('stokHareketTable').innerHTML = rows.map(r =>
+    `<tr><td>${r.tarih}</td><td>${r.islem}</td><td>${yakitAd(r.yakit)}</td><td>${r.litre} Lt</td><td>${r.kalan}</td></tr>`
+  ).join('');
+}
+
+function ikmalKaydet() {
+  const litre = parseFloat(document.getElementById('ikmal_litre').value);
+  const maliyet = parseFloat(document.getElementById('ikmal_maliyet').value);
+  const yakit = document.getElementById('ikmal_yakit').value;
+  if(!litre || !maliyet) { showAlert('ikmalAlert','Litre ve maliyet giriniz.','error'); return; }
+  DB.ikmallar.unshift({ tarih:document.getElementById('ikmal_tarih').value, yakit, litre, maliyet, toplam:litre*maliyet, fatura:document.getElementById('ikmal_fatura').value || 'FAT-YENİ' });
+  const tank = DB.tanklar.find(t => t.yakit === yakit);
+  if(tank) tank.mevcut = Math.min(tank.kapasite, tank.mevcut + litre);
+  renderIkmalTable();
+  showAlert('ikmalAlert', `${litre.toLocaleString()} litre ${yakitAd(yakit)} stoka eklendi.`, 'success');
+  document.getElementById('ikmal_litre').value = '';
+  document.getElementById('ikmal_maliyet').value = '';
+}
+
+// ═══════════════════════════════════════════════
+// SATIŞ
+// ═══════════════════════════════════════════════
+function renderSatisGiris() {
+  satisHesapla();
+  populateCariSelect('s_cari');
+}
+
+function satisHesapla() {
+  const litre = parseFloat(document.getElementById('s_litre')?.value) || 0;
+  const yakit = document.getElementById('s_yakit')?.value;
+  const fiyat = DB.fiyatlar[yakit] || 0;
+  const fEl = document.getElementById('s_fiyat');
+  if(fEl) fEl.value = fiyat;
+  const tEl = document.getElementById('s_tutar');
+  if(tEl) tEl.value = (litre * fiyat).toFixed(2);
+}
+
+function toggleCari() {
+  const tip = document.getElementById('s_odeme').value;
+  document.getElementById('cariRow').style.display = tip === 'cari' ? '' : 'none';
+}
+
+function satisKaydet() {
+  const litre = parseFloat(document.getElementById('s_litre').value);
+  if(!litre) { showAlert('satisAlert','Litre miktarı giriniz.','error'); return; }
+  const yakit = document.getElementById('s_yakit').value;
+  const fiyat = parseFloat(document.getElementById('s_fiyat').value);
+  const tutar = litre * fiyat;
+  const cariSec = document.getElementById('s_cari').value;
+  DB.satislar.unshift({
+    tarih:document.getElementById('s_tarih').value,
+    saat:document.getElementById('s_saat').value,
+    pompa:document.getElementById('s_pompa').value,
+    yakit, litre, fiyat, tutar,
+    odeme:document.getElementById('s_odeme').value,
+    cari: cariSec
+  });
+  if(cariSec) {
+    const c = DB.cariler.find(c => c.ad === cariSec);
+    if(c) c.bakiye -= tutar;
+  }
+  const tank = DB.tanklar.find(t => t.yakit === yakit);
+  if(tank) tank.mevcut = Math.max(0, tank.mevcut - litre);
+  showAlert('satisAlert', `${litre} Lt ${yakitAd(yakit)} satışı kaydedildi. Tutar: ${fmt(tutar)}₺`, 'success');
+  document.getElementById('s_litre').value = '';
+  satisHesapla();
+}
+
+function renderSatisListe() {
+  document.getElementById('satisListeTable').innerHTML = DB.satislar.map(s =>
+    `<tr><td>${s.tarih} ${s.saat}</td><td>${s.pompa}</td><td>${yakitAd(s.yakit)}</td><td>${s.litre}</td><td>${s.fiyat}₺</td><td>${fmt(s.tutar)}₺</td><td><span class="pill ${odemeClass(s.odeme)}">${s.odeme}</span></td><td>${s.cari||'—'}</td></tr>`
+  ).join('');
+}
+
+function satisFiltrele() { renderSatisListe(); }
+
+// ═══════════════════════════════════════════════
+// FİYAT
+// ═══════════════════════════════════════════════
+function renderFiyat() {
+  document.getElementById('fiyatCards').innerHTML = Object.entries(DB.fiyatlar).map(([k,v]) => `
+    <div class="fiyat-card">
+      <h3>${yakitAd(k)}</h3>
+      <div class="fiyat-val">${v.toFixed(3)}<span> ₺/Lt</span></div>
+    </div>`).join('');
+  document.getElementById('fiyatGecmisTable').innerHTML = DB.fiyatGecmis.map(f =>
+    `<tr><td>${f.tarih}</td><td>${yakitAd(f.yakit)}</td><td>${f.fiyat}₺</td><td style="color:${f.degisim.startsWith('+')?'var(--accent3)':'var(--accent4)'}">%${f.degisim}</td></tr>`
+  ).join('');
+}
+
+function fiyatGuncelle() {
+  const yakit = document.getElementById('fiyat_yakit').value;
+  const yeni = parseFloat(document.getElementById('fiyat_yeni').value);
+  if(!yeni) { showAlert('fiyatAlert','Yeni fiyat giriniz.','error'); return; }
+  const eski = DB.fiyatlar[yakit];
+  DB.fiyatlar[yakit] = yeni;
+  const degisim = (yeni - eski).toFixed(3);
+  DB.fiyatGecmis.unshift({ tarih:today(), yakit, fiyat:yeni, degisim: (degisim>=0?'+':'')+degisim });
+  renderFiyat();
+  showAlert('fiyatAlert', `${yakitAd(yakit)} fiyatı ${yeni}₺ olarak güncellendi.`, 'success');
+}
+
+// ═══════════════════════════════════════════════
+// CARİ
+// ═══════════════════════════════════════════════
+function renderCari() {
+  document.getElementById('cariListeTable').innerHTML = DB.cariler.map(c =>
+    `<tr>
+      <td><b>${c.kod}</b></td>
+      <td>${c.ad}</td>
+      <td>${c.tel}</td>
+      <td style="color:${c.bakiye<0?'var(--accent4)':'var(--accent3)'}; font-weight:800; font-family:'JetBrains Mono',monospace;">${fmt(Math.abs(c.bakiye))}₺</td>
+      <td>${fmt(c.limit)}₺</td>
+      <td><span class="pill ${Math.abs(c.bakiye)/c.limit > 0.8 ? 'red' : 'green'}">${Math.abs(c.bakiye)/c.limit > 0.8 ? 'Limit Dolu' : 'Normal'}</span></td>
+      <td><button class="btn btn-outline btn-sm" onclick="cariEkstreSec('${c.ad}')">Ekstre</button></td>
+    </tr>`
+  ).join('');
+}
+
+function cariEkstreSec(ad) {
+  document.querySelectorAll('.tab')[2].click();
+  setTimeout(() => {
+    document.getElementById('ekstra_cari').value = ad;
+    cariEkstreYukle();
+  }, 50);
+}
+
+function cariEkstreYukle() {
+  const cariAd = document.getElementById('ekstra_cari').value;
+  if(!cariAd) { document.getElementById('ekstreTable').innerHTML = ''; return; }
+  const satislar = DB.satislar.filter(s => s.cari === cariAd);
+  const tahsilatlar = DB.tahsilatlar.filter(t => t.cari === cariAd);
+  let rows = [], bakiye = 0;
+  const items = [
+    ...satislar.map(s => ({ tarih:s.tarih, aciklama:`Satış - ${yakitAd(s.yakit)} ${s.litre}Lt`, borc:s.tutar, alacak:0 })),
+    ...tahsilatlar.map(t => ({ tarih:t.tarih, aciklama:'Tahsilat - '+t.aciklama, borc:0, alacak:t.tutar }))
+  ].sort((a,b) => a.tarih.localeCompare(b.tarih));
+  rows = items.map(i => {
+    bakiye += i.borc - i.alacak;
+    return `<tr><td>${i.tarih}</td><td>${i.aciklama}</td><td>${i.borc?fmt(i.borc)+'₺':'—'}</td><td>${i.alacak?fmt(i.alacak)+'₺':'—'}</td><td style="color:${bakiye>0?'var(--accent4)':'var(--accent3)'}; font-weight:700">${fmt(Math.abs(bakiye))}₺</td></tr>`;
+  });
+  document.getElementById('ekstreTable').innerHTML = rows.join('') || '<tr><td colspan="5" style="text-align:center;color:var(--text3)">Kayıt bulunamadı</td></tr>';
+}
+
+function cariKaydet() {
+  const ad = document.getElementById('c_ad').value.trim();
+  if(!ad) { showAlert('cariAlert','Cari adı zorunludur.','error'); return; }
+  DB.cariler.push({
+    kod: document.getElementById('c_kod').value || 'CAR-'+Date.now(),
+    ad, tel:document.getElementById('c_tel').value,
+    vkn:document.getElementById('c_vkn').value, limit:parseFloat(document.getElementById('c_limit').value)||0,
+    bakiye:0, tip:document.getElementById('c_tip').value
+  });
+  populateCariSelects();
+  showAlert('cariAlert', `"${ad}" cari hesabı oluşturuldu.`, 'success');
+  ['c_kod','c_ad','c_tel','c_vkn','c_limit','c_adres'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+}
+
+function populateCariSelects() {
+  ['s_cari','t_cari','ekstra_cari'].forEach(id => populateCariSelect(id));
+}
+
+function populateCariSelect(id) {
+  const sel = document.getElementById(id);
+  if(!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">Seçiniz...</option>' + DB.cariler.map(c => `<option value="${c.ad}">${c.kod} – ${c.ad}</option>`).join('');
+  sel.value = cur;
+}
+
+// ═══════════════════════════════════════════════
+// TAHSİLAT
+// ═══════════════════════════════════════════════
+function renderTahsilat() {
+  populateCariSelect('t_cari');
+  document.getElementById('tahsilatTable').innerHTML = DB.tahsilatlar.map(t =>
+    `<tr><td>${t.tarih}</td><td>${t.cari}</td><td style="color:var(--accent3);font-weight:700">${fmt(t.tutar)}₺</td><td><span class="pill ${odemeClass(t.tip)}">${t.tip}</span></td><td>${t.aciklama||'—'}</td></tr>`
+  ).join('');
+}
+
+function tahsilatKaydet() {
+  const cari = document.getElementById('t_cari').value;
+  const tutar = parseFloat(document.getElementById('t_tutar').value);
+  if(!cari || !tutar) { showAlert('tahsilatAlert','Cari ve tutar zorunludur.','error'); return; }
+  DB.tahsilatlar.unshift({ tarih:document.getElementById('t_tarih').value, cari, tutar, tip:document.getElementById('t_tip').value, aciklama:document.getElementById('t_aciklama').value });
+  const c = DB.cariler.find(c => c.ad === cari);
+  if(c) c.bakiye += tutar;
+  renderTahsilat();
+  showAlert('tahsilatAlert', `${cari} için ${fmt(tutar)}₺ tahsilat kaydedildi.`, 'success');
+  document.getElementById('t_tutar').value='';
+  document.getElementById('t_aciklama').value='';
+}
+
+// ═══════════════════════════════════════════════
+// GİDER
+// ═══════════════════════════════════════════════
+function renderGider() {
+  document.getElementById('giderTable').innerHTML = DB.giderler.map(g =>
+    `<tr><td>${g.tarih}</td><td>${g.kat}</td><td style="color:var(--accent4);font-weight:700">${fmt(g.tutar)}₺</td><td>${g.tip}</td><td>${g.aciklama||'—'}</td></tr>`
+  ).join('');
+}
+
+function giderKaydet() {
+  const tutar = parseFloat(document.getElementById('g_tutar').value);
+  if(!tutar) { showAlert('giderAlert','Tutar giriniz.','error'); return; }
+  DB.giderler.unshift({ tarih:document.getElementById('g_tarih').value, kat:document.getElementById('g_kat').value, tutar, tip:document.getElementById('g_tip').value, aciklama:document.getElementById('g_aciklama').value });
+  renderGider();
+  showAlert('giderAlert', `${document.getElementById('g_kat').value} gideri kaydedildi.`, 'success');
+  document.getElementById('g_tutar').value='';
+  document.getElementById('g_aciklama').value='';
+}
+
+// ═══════════════════════════════════════════════
+// RAPOR
+// ═══════════════════════════════════════════════
+function renderRapor() { raporYukle(); }
+
+function raporYukle() {
+  const tarih = document.getElementById('r_tarih').value;
+  const gs = DB.satislar.filter(s => s.tarih === tarih);
+  const benzin = gs.filter(s=>s.yakit==='benzin');
+  const motorin = gs.filter(s=>s.yakit==='motorin');
+  const lpg = gs.filter(s=>s.yakit==='lpg');
+  const total = gs.reduce((a,s)=>a+s.tutar,0);
+  document.getElementById('gunlukSatisRapor').innerHTML = `
+    <div class="rapor-row"><span class="rr-label">Kurşunsuz Benzin 95</span><span class="rr-val">${fmt(benzin.reduce((a,s)=>a+s.tutar,0))}₺</span></div>
+    <div class="rapor-row"><span class="rr-label">Motorin</span><span class="rr-val">${fmt(motorin.reduce((a,s)=>a+s.tutar,0))}₺</span></div>
+    <div class="rapor-row"><span class="rr-label">LPG</span><span class="rr-val">${fmt(lpg.reduce((a,s)=>a+s.tutar,0))}₺</span></div>
+    <div class="rapor-row"><span class="rr-label">TOPLAM</span><span class="rr-val pos">${fmt(total)}₺</span></div>`;
+  const nakit = gs.filter(s=>s.odeme==='nakit').reduce((a,s)=>a+s.tutar,0);
+  const kart = gs.filter(s=>s.odeme==='kart').reduce((a,s)=>a+s.tutar,0);
+  const cari = gs.filter(s=>s.odeme==='cari').reduce((a,s)=>a+s.tutar,0);
+  document.getElementById('gunlukOdemeRapor').innerHTML = `
+    <div class="rapor-row"><span class="rr-label">Nakit</span><span class="rr-val">${fmt(nakit)}₺</span></div>
+    <div class="rapor-row"><span class="rr-label">Kredi Kartı</span><span class="rr-val">${fmt(kart)}₺</span></div>
+    <div class="rapor-row"><span class="rr-label">Cari Hesap</span><span class="rr-val">${fmt(cari)}₺</span></div>
+    <div class="rapor-row"><span class="rr-label">TOPLAM</span><span class="rr-val pos">${fmt(total)}₺</span></div>`;
+}
+
+function aylikRaporYukle() {
+  const yil = parseInt(document.getElementById('r_yil').value);
+  const ay = parseInt(document.getElementById('r_ay').value).toString().padStart(2,'0');
+  const prefix = `${yil}-${ay}`;
+  const gs = DB.satislar.filter(s => s.tarih.startsWith(prefix));
+  const toplamSatis = gs.reduce((a,s)=>a+s.tutar,0);
+  const toplamGider = DB.giderler.filter(g=>g.tarih.startsWith(prefix)).reduce((a,g)=>a+g.tutar,0);
+  const toplamIkmal = DB.ikmallar.filter(i=>i.tarih.startsWith(prefix)).reduce((a,i)=>a+i.toplam,0);
+  const kar = toplamSatis - toplamGider - toplamIkmal;
+  document.getElementById('aylikRaporBox').innerHTML = `
+    <div class="rapor-row"><span class="rr-label">Toplam Satış Geliri</span><span class="rr-val pos">${fmt(toplamSatis)}₺</span></div>
+    <div class="rapor-row"><span class="rr-label">Yakıt Alım Maliyeti</span><span class="rr-val neg">-${fmt(toplamIkmal)}₺</span></div>
+    <div class="rapor-row"><span class="rr-label">İşletme Giderleri</span><span class="rr-val neg">-${fmt(toplamGider)}₺</span></div>
+    <div class="rapor-row"><span class="rr-label">NET KÂR / ZARAR</span><span class="rr-val ${kar>=0?'pos':'neg'}">${kar>=0?'+':''}${fmt(kar)}₺</span></div>`;
+}
+
+function renderKarolRapor() {
+  const toplamSatis = DB.satislar.reduce((a,s)=>a+s.tutar,0);
+  const toplamGider = DB.giderler.reduce((a,g)=>a+g.tutar,0);
+  const toplamIkmal = DB.ikmallar.reduce((a,i)=>a+i.toplam,0);
+  const toplamTahsilat = DB.tahsilatlar.reduce((a,t)=>a+t.tutar,0);
+  const cariAlacak = DB.cariler.reduce((a,c)=>a+Math.abs(c.bakiye),0);
+  const kar = toplamSatis - toplamGider - toplamIkmal;
+  document.getElementById('karolRaporBox').innerHTML = `
+    <div class="rapor-row"><span class="rr-label">Toplam Satış Geliri</span><span class="rr-val pos">${fmt(toplamSatis)}₺</span></div>
+    <div class="rapor-row"><span class="rr-label">Toplam İkmal Maliyeti</span><span class="rr-val neg">-${fmt(toplamIkmal)}₺</span></div>
+    <div class="rapor-row"><span class="rr-label">Toplam İşletme Gideri</span><span class="rr-val neg">-${fmt(toplamGider)}₺</span></div>
+    <div class="rapor-row"><span class="rr-label">Toplam Tahsilat</span><span class="rr-val pos">${fmt(toplamTahsilat)}₺</span></div>
+    <div class="rapor-row"><span class="rr-label">Cari Toplam Alacak</span><span class="rr-val neg">-${fmt(cariAlacak)}₺</span></div>
+    <div class="rapor-row"><span class="rr-label">TOPLAM KÂR / ZARAR</span><span class="rr-val ${kar>=0?'pos':'neg'}">${kar>=0?'+':''}${fmt(kar)}₺</span></div>`;
+}
+
+// ═══════════════════════════════════════════════
+// PERSONEL
+// ═══════════════════════════════════════════════
+function renderPersonel() {
+  document.getElementById('personelTable').innerHTML = DB.personel.map(p =>
+    `<tr><td><b>${p.ad}</b></td><td>${p.poz}</td><td>${p.tel}</td><td>${p.vardiya}</td><td>${fmt(p.maas)}₺</td><td><span class="pill green">Aktif</span></td></tr>`
+  ).join('');
+}
+
+function personelKaydet() {
+  const ad = document.getElementById('p_ad').value.trim();
+  if(!ad) { showAlert('personelAlert','Ad Soyad zorunludur.','error'); return; }
+  DB.personel.push({ ad, poz:document.getElementById('p_poz').value, tel:document.getElementById('p_tel').value, vardiya:document.getElementById('p_vardiya').value, maas:parseFloat(document.getElementById('p_maas').value)||0, aktif:true });
+  renderPersonel();
+  showAlert('personelAlert', `"${ad}" personel olarak eklendi.`, 'success');
+  ['p_ad','p_tel','p_tc','p_maas'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+}
+
+// ═══════════════════════════════════════════════
+// YARDIMCI FONKSİYONLAR
+// ═══════════════════════════════════════════════
+function fmt(n) {
+  return (n||0).toLocaleString('tr-TR', { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+function yakitAd(k) {
+  return k==='benzin'?'Kurşunsuz 95':k==='motorin'?'Motorin':k==='lpg'?'LPG':k;
+}
+function odemeClass(o) {
+  return o==='nakit'?'green':o==='kart'?'blue':o==='cari'?'yellow':'green';
+}
+function tankCard(t) {
+  const pct = Math.round((t.mevcut/t.kapasite)*100);
+  return `<div class="tank-card">
+    <h3>${t.ad}</h3>
+    <div class="tank-bar-wrap"><div class="tank-bar ${t.renk}" style="width:${pct}%"></div></div>
+    <div class="tank-info"><span>${t.mevcut.toLocaleString()} Lt</span><span>${pct}%</span><span>${t.kapasite.toLocaleString()} Lt</span></div>
+  </div>`;
+}
+function showAlert(id, msg, type) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.textContent = msg;
+  el.className = `alert ${type} show`;
+  setTimeout(() => el.className = 'alert', 4000);
+}
+</script>
+
+</body>
+</html>
